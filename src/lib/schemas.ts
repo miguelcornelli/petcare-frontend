@@ -12,6 +12,11 @@ export const registerStep1Schema = z.object({
   cpf: z.string().optional(),
   crmv: z.string().optional(),
   phone: z.string().min(1, 'Telefone obrigatório'),
+  zipCode: z.string().optional(),
+  street: z.string().optional(),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
 }).superRefine((data, ctx) => {
   if (data.role === 'TUTOR' && !data.cpf?.trim()) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'CPF obrigatório', path: ['cpf'] })
@@ -19,6 +24,16 @@ export const registerStep1Schema = z.object({
   if (data.role === 'VET' && !data.crmv?.trim()) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'CRMV obrigatório', path: ['crmv'] })
   }
+})
+
+export const profileSchema = z.object({
+  name: z.string().min(2, 'Nome muito curto'),
+  phone: z.string().optional(),
+  zipCode: z.string().optional(),
+  street: z.string().optional(),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
 })
 
 const passwordSchema = z
@@ -99,6 +114,7 @@ export const allergySchema = z.object({
 
 export type LoginInput = z.infer<typeof loginSchema>
 export type RegisterInput = z.infer<typeof registerSchema>
+export type ProfileInput = z.infer<typeof profileSchema>
 export type RegisterStep1Input = z.infer<typeof registerStep1Schema>
 export type RegisterStep2Input = z.infer<typeof registerStep2Schema>
 export type PetInput = z.infer<typeof petSchema>

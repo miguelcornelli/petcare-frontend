@@ -5,6 +5,14 @@ export interface User {
   name: string
   email: string
   role: Role
+  cpf?: string
+  crmv?: string
+  phone?: string
+  zipCode?: string
+  street?: string
+  neighborhood?: string
+  city?: string
+  state?: string
 }
 
 export interface AuthTokens {

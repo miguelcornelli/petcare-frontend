@@ -9,7 +9,7 @@ import { authService } from '@/services/auth.service'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
-import { PawPrint, Eye, EyeOff, ArrowLeft } from 'lucide-react'
+import { PawPrint, Eye, EyeOff, ArrowLeft, MapPin } from 'lucide-react'
 import { AxiosError } from 'axios'
 import { ApiError } from '@/types'
 
@@ -101,6 +101,28 @@ export default function RegisterPage() {
                   <Input dark label="CRMV" placeholder="CRMV-SP 12345" error={form1.formState.errors.crmv?.message} {...form1.register('crmv')} />
                 )}
                 <Input dark label="Telefone" placeholder="(11) 99999-0000" error={form1.formState.errors.phone?.message} {...form1.register('phone')} />
+
+                {/* Endereço */}
+                <div className="pt-2">
+                  <div className="flex items-center gap-2 mb-3">
+                    <MapPin size={15} className="text-emerald-500" />
+                    <span className="text-sm font-semibold text-gray-700">Endereço</span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex gap-2">
+                      <div className="w-32">
+                        <Input dark label="CEP" placeholder="00000-000" error={form1.formState.errors.zipCode?.message} {...form1.register('zipCode')} />
+                      </div>
+                      <div className="flex-1">
+                        <Input dark label="Estado (UF)" placeholder="SP" error={form1.formState.errors.state?.message} {...form1.register('state')} />
+                      </div>
+                    </div>
+                    <Input dark label="Cidade" placeholder="São Paulo" error={form1.formState.errors.city?.message} {...form1.register('city')} />
+                    <Input dark label="Bairro" placeholder="Centro" error={form1.formState.errors.neighborhood?.message} {...form1.register('neighborhood')} />
+                    <Input dark label="Rua e número" placeholder="Rua das Flores, 123" error={form1.formState.errors.street?.message} {...form1.register('street')} />
+                  </div>
+                </div>
+
                 <Button type="submit" className="w-full" size="lg">Continuar</Button>
               </form>
             </>
@@ -134,7 +156,6 @@ export default function RegisterPage() {
                   )}
                 </div>
 
-                {/* Indicador de força */}
                 {password.length > 0 && (
                   <ul className="space-y-1">
                     {rules.map((r) => (

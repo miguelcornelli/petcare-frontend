@@ -7,7 +7,7 @@ import { Pet, Vaccine } from '@/types'
 import { VaccineCard } from '@/components/cards/VaccineCard'
 import { Button } from '@/components/ui/Button'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { ArrowLeft, Syringe, Plus } from 'lucide-react'
+import { ArrowLeft, Syringe, Plus, Pencil } from 'lucide-react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import { formatDate } from '@/utils/date'
@@ -38,7 +38,10 @@ export default function PetDetailPage() {
         <Link href="/pets" className="p-2 rounded-xl hover:bg-gray-100" aria-label="Voltar">
           <ArrowLeft size={20} className="text-gray-600" />
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">{pet.name}</h1>
+        <h1 className="text-xl font-bold text-gray-900 flex-1">{pet.name}</h1>
+        <Link href={`/pets/${id}/editar`} className="p-2 rounded-xl hover:bg-gray-100 transition-colors" aria-label="Editar pet">
+          <Pencil size={18} className="text-gray-500" />
+        </Link>
       </div>
 
       <Card>

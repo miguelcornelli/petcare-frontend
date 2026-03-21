@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Dog, Syringe, Bug, Stethoscope, FlaskConical, AlertTriangle, Shield, LogOut, PawPrint } from 'lucide-react'
+import { Home, Dog, Syringe, Bug, Stethoscope, FlaskConical, AlertTriangle, Shield, LogOut, PawPrint, UserCircle } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -32,7 +32,7 @@ export function Sidebar() {
       </div>
 
       <div className="p-4 border-b border-gray-100">
-        <div className="flex items-center gap-3">
+        <Link href="/perfil" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center">
             <span className="text-emerald-700 font-semibold text-sm">{user?.name?.[0]?.toUpperCase()}</span>
           </div>
@@ -40,7 +40,7 @@ export function Sidebar() {
             <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
             <p className="text-xs text-gray-500">{user?.role === 'TUTOR' ? 'Tutor' : user?.role === 'VET' ? 'Veterinário' : 'Clínica'}</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto" aria-label="Navegação lateral">
@@ -55,7 +55,11 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="p-3 border-t border-gray-100">
+      <div className="p-3 border-t border-gray-100 space-y-1">
+        <Link href="/perfil" className={cn('flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-colors', pathname === '/perfil' ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-600 hover:bg-gray-50')}>
+          <UserCircle size={18} />
+          Meu Perfil
+        </Link>
         <button onClick={logout} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-600 hover:bg-red-50 hover:text-red-600 w-full transition-colors">
           <LogOut size={18} />
           Sair
