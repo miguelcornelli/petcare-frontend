@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Dog, Syringe, Bug, Stethoscope, FlaskConical, AlertTriangle, Shield, LogOut, PawPrint, UserCircle } from 'lucide-react'
+import { Home, Dog, Syringe, Bug, Stethoscope, FlaskConical, AlertTriangle, Shield, LogOut, PawPrint, UserCircle, Search } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -16,9 +16,16 @@ const tutorNav = [
   { href: '/acessos', icon: Shield, label: 'Acessos' },
 ]
 
+const vetNav = [
+  { href: '/vet/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/vet/buscar', icon: Search, label: 'Buscar Pet' },
+]
+
 export function Sidebar() {
   const pathname = usePathname()
   const { user, logout } = useAuth()
+
+  const nav = user?.role === 'VET' ? vetNav : tutorNav
 
   return (
     <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-200 h-full fixed left-0 top-0 bottom-0 z-30">
@@ -44,7 +51,7 @@ export function Sidebar() {
       </div>
 
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto" aria-label="Navegação lateral">
-        {tutorNav.map(({ href, icon: Icon, label }) => {
+        {nav.map(({ href, icon: Icon, label }) => {
           const active = pathname === href || pathname.startsWith(href + '/')
           return (
             <Link key={href} href={href} className={cn('flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-colors', active ? 'bg-emerald-50 text-emerald-700 font-medium' : 'text-gray-600 hover:bg-gray-50')}>

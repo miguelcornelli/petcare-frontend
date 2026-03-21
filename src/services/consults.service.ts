@@ -8,7 +8,11 @@ export const consultsService = {
 
   create: (petId: string, data: ConsultInput, attachments?: File[]) => {
     const form = new FormData()
-    Object.entries(data).forEach(([k, v]) => v && form.append(k, v))
+    Object.entries(data).forEach(([k, v]) => {
+      if (!v) return
+      if (k === 'date') form.append(k, new Date(v).toISOString())
+      else form.append(k, v)
+    })
     attachments?.forEach((f) => form.append('attachments', f))
     return api.post<Consult>(`/pets/${petId}/consults`, form, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data)
   },

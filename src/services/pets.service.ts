@@ -22,6 +22,9 @@ export const petsService = {
     return api.put<Pet>(`/pets/${id}`, form, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data)
   },
 
+  searchByCpf: (cpf: string) =>
+    api.get<{ tutor: { id: string; name: string; email: string; phone?: string; cpf?: string }; pets: Pet[] }>(`/pets/search?cpf=${cpf.replace(/\D/g, '')}`).then((r) => r.data),
+
   delete: (id: string) => api.delete(`/pets/${id}`),
 
   addWeight: (petId: string, weight: number, date: string) =>
