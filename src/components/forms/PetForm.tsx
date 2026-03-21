@@ -44,13 +44,13 @@ export function PetForm({ defaultValues, onSubmit, loading }: PetFormProps) {
         <input ref={fileRef} type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
       </div>
 
-      <Input label="Nome" placeholder="Nome do pet" error={errors.name?.message} {...register('name')} />
-      <Input label="Espécie" placeholder="Cão, Gato..." error={errors.species?.message} {...register('species')} />
-      <Input label="Raça" placeholder="Opcional" {...register('breed')} />
-      <Select label="Sexo" options={[{ value: 'MALE', label: 'Macho' }, { value: 'FEMALE', label: 'Fêmea' }]} error={errors.gender?.message} {...register('gender')} />
-      <Input label="Data de Nascimento" type="date" error={errors.birthDate?.message} {...register('birthDate')} />
-      <Input label="Cor / Pelagem" placeholder="Opcional" {...register('color')} />
-      <Input label="Microchip" placeholder="Opcional" {...register('microchip')} />
+      <Input dark label="Nome" placeholder="Nome do pet" error={errors.name?.message} {...register('name')} />
+      <Input dark label="Espécie" placeholder="Cão, Gato..." error={errors.species?.message} {...register('species')} />
+      <Input dark label="Raça" placeholder="Opcional" {...register('breed')} />
+      <Select dark label="Sexo" options={[{ value: 'MALE', label: 'Macho' }, { value: 'FEMALE', label: 'Fêmea' }]} error={errors.gender?.message} {...register('gender')} />
+      <Input dark label="Data de Nascimento" type="date" error={errors.birthDate?.message} {...register('birthDate')} />
+      <Input dark label="Cor / Pelagem" placeholder="Opcional" {...register('color')} />
+      <Input dark label="Microchip" placeholder="Opcional" {...register('microchip')} />
 
       <Button type="submit" loading={loading} className="w-full">Salvar Pet</Button>
     </form>
