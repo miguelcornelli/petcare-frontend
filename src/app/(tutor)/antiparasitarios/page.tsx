@@ -5,25 +5,54 @@ import { parasitesService } from '@/services/parasites.service'
 import { Pet, AntiParasite } from '@/types'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
+import { Modal } from '@/components/ui/Modal'
+import { Select } from '@/components/ui/Select'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { Bug } from 'lucide-react'
+import { AntiParasiteForm } from '@/components/forms/AntiParasiteForm'
+import { Bug, Plus } from 'lucide-react'
 import { formatDate, isExpired, isExpiringSoon } from '@/utils/date'
+import { AntiParasiteInput } from '@/lib/schemas'
 import toast from 'react-hot-toast'
 
 export default function AntiparasitariosPage() {
   const [petItems, setPetItems] = useState<{ pet: Pet; items: AntiParasite[] }[]>([])
+  const [allPets, setAllPets] = useState<Pet[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedPetId, setSelectedPetId] = useState<string | 'all'>('all')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [modalPetId, setModalPetId] = useState('')
+
+  async function load() {
+    const { data: pets } = await petsService.list({ limit: 50 })
+    setAllPets(pets)
+    const all = await Promise.all(pets.map(async (pet) => {
+      const { data: items } = await parasitesService.list(pet.id)
+      return { pet, items }
+    }))
+    setPetItems(all.filter((x) => x.items.length > 0))
+    if (pets.length > 0 && !modalPetId) setModalPetId(pets[0].id)
+  }
 
   useEffect(() => {
-    petsService.list({ limit: 50 }).then(async ({ data: pets }) => {
-      const all = await Promise.all(pets.map(async (pet) => {
-        const { data: items } = await parasitesService.list(pet.id)
-        return { pet, items }
-      }))
-      setPetItems(all.filter((x) => x.items.length > 0))
-    }).catch(() => toast.error('Erro ao carregar dados')).finally(() => setLoading(false))
+    load().catch(() => toast.error('Erro ao carregar dados')).finally(() => setLoading(false))
   }, [])
+
+  async function handleAdd(data: AntiParasiteInput) {
+    if (!modalPetId) return
+    setSaving(true)
+    try {
+      await parasitesService.create(modalPetId, data)
+      toast.success('Antiparasitário registrado!')
+      setModalOpen(false)
+      await load()
+    } catch {
+      toast.error('Erro ao salvar')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const filtered = selectedPetId === 'all' ? petItems : petItems.filter((x) => x.pet.id === selectedPetId)
 
@@ -31,7 +60,14 @@ export default function AntiparasitariosPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-gray-900">Antiparasitários</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold text-gray-900">Antiparasitários</h1>
+        {allPets.length > 0 && (
+          <Button size="sm" onClick={() => setModalOpen(true)}>
+            <Plus size={16} className="mr-1" />Adicionar
+          </Button>
+        )}
+      </div>
 
       {petItems.length > 1 && (
         <div className="flex gap-2 flex-wrap">
@@ -54,7 +90,12 @@ export default function AntiparasitariosPage() {
       )}
 
       {!filtered.length ? (
-        <EmptyState icon={Bug} title="Nenhum registro" description="Os registros antiparasitários aparecerão aqui" />
+        <EmptyState
+          icon={Bug}
+          title="Nenhum registro"
+          description="Adicione o primeiro antiparasitário"
+          action={allPets.length > 0 ? <Button size="sm" onClick={() => setModalOpen(true)}><Plus size={14} className="mr-1" />Adicionar</Button> : undefined}
+        />
       ) : (
         filtered.map(({ pet, items }) => (
           <div key={pet.id}>
@@ -80,6 +121,21 @@ export default function AntiparasitariosPage() {
           </div>
         ))
       )}
+
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Novo Antiparasitário">
+        {allPets.length > 1 && (
+          <div className="mb-4">
+            <Select
+              dark
+              label="Pet"
+              options={allPets.map((p) => ({ value: p.id, label: p.name }))}
+              value={modalPetId}
+              onChange={(e) => setModalPetId(e.target.value)}
+            />
+          </div>
+        )}
+        <AntiParasiteForm onSubmit={handleAdd} loading={saving} />
+      </Modal>
     </div>
   )
 }

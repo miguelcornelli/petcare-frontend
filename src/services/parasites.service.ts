@@ -8,7 +8,11 @@ export const parasitesService = {
 
   create: (petId: string, data: AntiParasiteInput, boxPhoto?: File) => {
     const form = new FormData()
-    Object.entries(data).forEach(([k, v]) => v && form.append(k, v))
+    Object.entries(data).forEach(([k, v]) => {
+      if (!v) return
+      if (k === 'appliedAt' || k === 'expiresAt') form.append(k, new Date(v).toISOString())
+      else form.append(k, v)
+    })
     if (boxPhoto) form.append('boxPhoto', boxPhoto)
     return api.post<AntiParasite>(`/pets/${petId}/parasites`, form, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data)
   },

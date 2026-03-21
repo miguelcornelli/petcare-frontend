@@ -8,7 +8,12 @@ export const examsService = {
 
   create: (petId: string, data: ExamInput, file?: File) => {
     const form = new FormData()
-    Object.entries(data).forEach(([k, v]) => v && form.append(k, v))
+    Object.entries(data).forEach(([k, v]) => {
+      if (!v) return
+      // backend expects full ISO datetime
+      if (k === 'date') form.append(k, new Date(v).toISOString())
+      else form.append(k, v)
+    })
     if (file) form.append('file', file)
     return api.post<Exam>(`/pets/${petId}/exams`, form, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data)
   },
