@@ -49,13 +49,13 @@ export default function RegisterPage() {
         </div>
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-            <Input label="Nome completo" error={errors.name?.message} {...register('name')} />
-            <Input label="E-mail" type="email" error={errors.email?.message} {...register('email')} />
-            <Input label="Senha" type="password" error={errors.password?.message} {...register('password')} />
+            <Input dark label="Nome completo" error={errors.name?.message} {...register('name')} />
+            <Input dark label="E-mail" type="email" error={errors.email?.message} {...register('email')} />
+            <Input dark label="Senha" type="password" error={errors.password?.message} {...register('password')} />
             <Select label="Perfil" options={[{ value: 'TUTOR', label: 'Tutor (Dono do pet)' }, { value: 'VET', label: 'Veterinário' }, { value: 'CLINIC', label: 'Clínica / Estabelecimento' }]} error={errors.role?.message} {...register('role')} />
-            {role === 'TUTOR' && <Input label="CPF" placeholder="000.000.000-00" {...register('cpf')} />}
-            {role === 'VET' && <Input label="CRMV" placeholder="CRMV-SP 12345" {...register('crmv')} />}
-            <Input label="Telefone" placeholder="Opcional" {...register('phone')} />
+            {role === 'TUTOR' && <Input dark label="CPF" placeholder="000.000.000-00" {...register('cpf')} />}
+            {role === 'VET' && <Input dark label="CRMV" placeholder="CRMV-SP 12345" {...register('crmv')} />}
+            <Input dark label="Telefone" placeholder="Opcional" {...register('phone')} />
             <Button type="submit" loading={loading} className="w-full" size="lg">Criar conta</Button>
           </form>
           <p className="text-center text-sm text-gray-500 mt-4">

@@ -32,8 +32,8 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      <Input label="E-mail" type="email" placeholder="seu@email.com" error={errors.email?.message} {...register('email')} />
-      <Input label="Senha" type="password" placeholder="••••••" error={errors.password?.message} {...register('password')} />
+      <Input dark label="E-mail" type="email" placeholder="seu@email.com" error={errors.email?.message} {...register('email')} />
+      <Input dark label="Senha" type="password" placeholder="••••••" error={errors.password?.message} {...register('password')} />
       <Button type="submit" loading={loading} className="w-full" size="lg">
         Entrar
       </Button>
