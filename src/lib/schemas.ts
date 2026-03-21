@@ -5,10 +5,42 @@ export const loginSchema = z.object({
   password: z.string().min(6, 'Mínimo 6 caracteres'),
 })
 
-export const registerSchema = z.object({
+export const registerStep1Schema = z.object({
   name: z.string().min(2, 'Nome muito curto'),
   email: z.string().email('E-mail inválido'),
-  password: z.string().min(6, 'Mínimo 6 caracteres'),
+  role: z.enum(['TUTOR', 'VET', 'CLINIC']),
+  cpf: z.string().optional(),
+  crmv: z.string().optional(),
+  phone: z.string().min(1, 'Telefone obrigatório'),
+}).superRefine((data, ctx) => {
+  if (data.role === 'TUTOR' && !data.cpf?.trim()) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'CPF obrigatório', path: ['cpf'] })
+  }
+  if (data.role === 'VET' && !data.crmv?.trim()) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'CRMV obrigatório', path: ['crmv'] })
+  }
+})
+
+const passwordSchema = z
+  .string()
+  .min(6, 'Mínimo 6 caracteres')
+  .regex(/[A-Z]/, 'Deve conter letra maiúscula')
+  .regex(/[a-z]/, 'Deve conter letra minúscula')
+  .regex(/[0-9]/, 'Deve conter número')
+  .regex(/[^A-Za-z0-9]/, 'Deve conter caractere especial')
+
+export const registerStep2Schema = z.object({
+  password: passwordSchema,
+  confirmPassword: z.string(),
+}).refine((d) => d.password === d.confirmPassword, {
+  message: 'As senhas não coincidem',
+  path: ['confirmPassword'],
+})
+
+export const registerSchema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+  password: z.string().min(6),
   role: z.enum(['TUTOR', 'VET', 'CLINIC']),
   cpf: z.string().optional(),
   crmv: z.string().optional(),
@@ -67,6 +99,8 @@ export const allergySchema = z.object({
 
 export type LoginInput = z.infer<typeof loginSchema>
 export type RegisterInput = z.infer<typeof registerSchema>
+export type RegisterStep1Input = z.infer<typeof registerStep1Schema>
+export type RegisterStep2Input = z.infer<typeof registerStep2Schema>
 export type PetInput = z.infer<typeof petSchema>
 export type VaccineInput = z.infer<typeof vaccineSchema>
 export type AntiParasiteInput = z.infer<typeof antiParasiteSchema>
