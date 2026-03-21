@@ -13,6 +13,7 @@ import toast from 'react-hot-toast'
 export default function AntiparasitariosPage() {
   const [petItems, setPetItems] = useState<{ pet: Pet; items: AntiParasite[] }[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedPetId, setSelectedPetId] = useState<string | 'all'>('all')
 
   useEffect(() => {
     petsService.list({ limit: 50 }).then(async ({ data: pets }) => {
@@ -24,17 +25,40 @@ export default function AntiparasitariosPage() {
     }).catch(() => toast.error('Erro ao carregar dados')).finally(() => setLoading(false))
   }, [])
 
+  const filtered = selectedPetId === 'all' ? petItems : petItems.filter((x) => x.pet.id === selectedPetId)
+
   if (loading) return <div className="space-y-3">{[1, 2].map((i) => <div key={i} className="h-24 bg-gray-100 rounded-2xl animate-pulse" />)}</div>
 
   return (
     <div className="space-y-6">
       <h1 className="text-xl font-bold text-gray-900">Antiparasitários</h1>
-      {!petItems.length ? (
+
+      {petItems.length > 1 && (
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={() => setSelectedPetId('all')}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${selectedPetId === 'all' ? 'bg-emerald-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+          >
+            Todos
+          </button>
+          {petItems.map(({ pet }) => (
+            <button
+              key={pet.id}
+              onClick={() => setSelectedPetId(pet.id)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${selectedPetId === pet.id ? 'bg-emerald-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+            >
+              {pet.name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {!filtered.length ? (
         <EmptyState icon={Bug} title="Nenhum registro" description="Os registros antiparasitários aparecerão aqui" />
       ) : (
-        petItems.map(({ pet, items }) => (
+        filtered.map(({ pet, items }) => (
           <div key={pet.id}>
-            <h2 className="font-medium text-gray-700 mb-2">{pet.name}</h2>
+            {selectedPetId === 'all' && <h2 className="font-medium text-gray-700 mb-2">{pet.name}</h2>}
             <div className="space-y-2">
               {items.map((item) => {
                 const expired = isExpired(item.expiresAt)
