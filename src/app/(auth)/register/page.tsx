@@ -52,7 +52,7 @@ export default function RegisterPage() {
             <Input dark label="Nome completo" error={errors.name?.message} {...register('name')} />
             <Input dark label="E-mail" type="email" error={errors.email?.message} {...register('email')} />
             <Input dark label="Senha" type="password" error={errors.password?.message} {...register('password')} />
-            <Select label="Perfil" options={[{ value: 'TUTOR', label: 'Tutor (Dono do pet)' }, { value: 'VET', label: 'Veterinário' }, { value: 'CLINIC', label: 'Clínica / Estabelecimento' }]} error={errors.role?.message} {...register('role')} />
+            <Select dark label="Perfil" options={[{ value: 'TUTOR', label: 'Tutor (Dono do pet)' }, { value: 'VET', label: 'Veterinário' }, { value: 'CLINIC', label: 'Clínica / Estabelecimento' }]} error={errors.role?.message} {...register('role')} />
             {role === 'TUTOR' && <Input dark label="CPF" placeholder="000.000.000-00" {...register('cpf')} />}
             {role === 'VET' && <Input dark label="CRMV" placeholder="CRMV-SP 12345" {...register('crmv')} />}
             <Input dark label="Telefone" placeholder="Opcional" {...register('phone')} />
