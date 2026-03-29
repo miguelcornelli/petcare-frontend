@@ -1,6 +1,5 @@
-import type { Config } from 'jest'
-
-const config: Config = {
+/** @type {import('jest').Config} */
+const config = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
@@ -13,4 +12,4 @@ const config: Config = {
   coverageThreshold: { global: { lines: 80 } },
 }
 
-export default config
+module.exports = config
