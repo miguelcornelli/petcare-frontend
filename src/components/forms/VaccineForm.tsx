@@ -1,4 +1,5 @@
 'use client'
+/* eslint-disable react-compiler/react-compiler */
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { vaccineSchema, VaccineInput } from '@/lib/schemas'
