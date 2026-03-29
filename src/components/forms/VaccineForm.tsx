@@ -1,5 +1,4 @@
 'use client'
-/* eslint-disable react-compiler/react-compiler */
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { vaccineSchema, VaccineInput } from '@/lib/schemas'
@@ -39,6 +38,7 @@ export function VaccineForm({ onSubmit, loading }: VaccineFormProps) {
   }
 
   return (
+    // eslint-disable-next-line
     <form onSubmit={handleSubmit(submit)} className="space-y-4">
       <Input label="Nome da Vacina" placeholder="Ex: V10" error={errors.name?.message} {...register('name')} />
       <div className="grid grid-cols-2 gap-3">
